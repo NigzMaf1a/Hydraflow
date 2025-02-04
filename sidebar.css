@@ -1,0 +1,53 @@
+/* Sidebar styles */
+#Sidebar {
+    position: absolute;
+    width: 300px;
+    height: 100%;
+    background-image: linear-gradient(rgba(0, 0, 50, 0.8), rgba(0, 0, 50, 0.8)), url(../../Images/Site10.jpg);
+    transition: background-image 1s ease; /* Smooth transition for Sidebar background */
+    left: -300px;
+    border: 1px solid rgba(0, 0, 50, 0.8);
+    transition: 0.4s;
+    z-index: 2;
+    border-radius: 15px;
+}
+
+#Sidebar.active {
+    left: 0;
+}
+
+#Sidebar:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 50, 0.8);
+    border: 2px solid rgba(0, 0, 50, 0.8);
+}
+
+/* Style for each sidebar item */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px;
+    background-color: rgba(255, 255, 255, 0.1); /* Translucent background */
+    border-radius: 8px; /* Rounded corners */
+    margin: 10px 0; /* Space between items */
+    transition: background-color 0.3s;
+}
+
+.sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly more opaque on hover */
+}
+
+#Sidebar .toggle-btn {
+    position: absolute;
+    top: 5px;
+    left: 330px;
+}
+
+.toggle-btn span {
+    width: 45px;
+    height: 4px;
+    background: #ff0000;
+    display: block;
+    margin-top: 4px;
+}
+
+/*End Sidebar stylez*/
