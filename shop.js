@@ -1,124 +1,115 @@
-export class Shop{
-    constructor(shopID, shopName, shopDescription, shopAddress, shopPhone, shopEmail, shopLogo, shopImage, shopStatus, shopType){
-        this.shopID = shopID;
-        this.shopName = shopName;
-        this.shopDescription = shopDescription;
-        this.shopAddress = shopAddress;
-        this.shopPhone = shopPhone;
-        this.shopEmail = shopEmail;
-        this.shopLogo = shopLogo;
-        this.shopImage = shopImage;
-        this.shopStatus = shopStatus;
-        this.shopType = shopType;
+import Product from "./product";
+
+export default class Shop {
+    constructor(userID) {
+        this.userID = userID;
+        this.product = new Product();
+        this.cartItems = this.loadCart(); // Load from localStorage if available
     }
 
-    async getShop(){
-        try{
-            const response = await fetch("/Scriptz/BackEnd/getShopDetail.php");
-            if(!response.ok){
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            return data;
-        }catch(error){
-            console.error("Error fetching shop detail:", error);
-        }
-    }
-    async addProduct(productData) {
+    // 🛒 Display products on the shelf
+    async shopShelf(productsContainer) {
         try {
-            const response = await fetch("/Scriptz/BackEnd/addProduct.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(productData) // Convert product data to JSON
+            productsContainer.innerHTML = "";
+            const allItems = await this.product.getProducts();
+            const shelfItems = allItems.filter(item => item.Available === 'YES');
+
+            shelfItems.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add('cont1');
+
+                const nameP = document.createElement("p");
+                nameP.classList.add('p');
+                nameP.textContent = `Name: ${item.ProductName}`;
+
+                const descP = document.createElement("p");
+                descP.classList.add('p');
+                descP.textContent = `Description: ${item.ProductDescription}`;
+
+                const priceP = document.createElement("p");
+                priceP.classList.add('p');
+                priceP.textContent = `Price: $${item.Price}`;
+
+                const imageDiv = document.createElement("div");
+                imageDiv.classList.add('imDiv');
+                imageDiv.style.backgroundImage = `url(${item.ProductImage})`;
+
+                const addBtn = document.createElement("button");
+                addBtn.classList.add("add-btn");
+                addBtn.textContent = "Add to Cart";
+                addBtn.addEventListener("click", () => {
+                    this.addToCart(item);
+                });
+
+                itemDiv.appendChild(nameP);
+                itemDiv.appendChild(descP);
+                itemDiv.appendChild(priceP);
+                itemDiv.appendChild(imageDiv);
+                itemDiv.appendChild(addBtn);
+
+                productsContainer.appendChild(itemDiv);
             });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json(); // Await JSON response
-            return data;
         } catch (error) {
-            console.error("Error adding product:", error);
-            throw error; // Rethrow to handle it where the function is called
+            console.error('Error getting product shelf:', error.message);
         }
     }
-    async getProducts(){
-        try{
-            const response = await fetch("/Scriptz/BackEnd/getShopProducts.php");
-            if(!response.ok){
-                throw new Error(`HTTP error! Status: ${response.status}`);
+
+    // 🧠 Add product to cart
+    addToCart(product) {
+        const index = this.cartItems.findIndex(item => item.ProductID === product.ProductID);
+
+        if (index !== -1) {
+            this.cartItems[index].quantity += 1;
+        } else {
+            this.cartItems.push({ ...product, quantity: 1 });
+        }
+
+        this.saveCart();
+        console.log(`${product.ProductName} added to cart`);
+    }
+
+    // 🔍 View current cart
+    getCart() {
+        return this.cartItems;
+    }
+
+    // 🔄 Update quantity of specific item
+    updateQuantity(productID, newQty) {
+        const item = this.cartItems.find(item => item.ProductID === productID);
+
+        if (item) {
+            if (newQty <= 0) {
+                this.removeFromCart(productID);
+            } else {
+                item.quantity = newQty;
+                this.saveCart();
+                console.log(`Updated quantity to ${newQty}`);
             }
-            const data = await response.json();
-            return data;
-        }catch(error){
-            console.error("Error fetching shop detail:", error);
         }
     }
-    async updateProduct(method = "GET", productData = null) {
-        try {
-            const options = {
-                method,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            };
-    
-            // Add body only if it's a POST request
-            if (method === "POST" && productData) {
-                options.body = JSON.stringify(productData);
-            }
-    
-            const response = await fetch("/Scriptz/BackEnd/shopUpdateProduct.php", options);
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            return await response.json(); // Return parsed response data
-        } catch (error) {
-            console.error(`Error with ${method} request:`, error);
-            throw error;
-        }
+
+    // ❌ Remove item from cart
+    removeFromCart(productID) {
+        this.cartItems = this.cartItems.filter(item => item.ProductID !== productID);
+        this.saveCart();
+        console.log(`Removed item ${productID} from cart`);
     }
-    
-    async deleteProduct(){
-        try{
-            const response = await fetch("/Scriptz/BackEnd/deleteProduct.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ productId: productId })
-            });
-            if(!response.ok){
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            return data;
-        }catch(error){
-            console.error("Error deleting product:", error);
-        }
+
+    // 🧹 Clear whole cart
+    clearCart() {
+        this.cartItems = [];
+        this.saveCart();
+        console.log("Cart cleared");
     }
-    async searchProducts(query) {
-        try {
-            const productList = await this.getProducts(); // Fetch products
-    
-            if (!productList || productList.length === 0) {
-                console.log("No products found.");
-                return [];
-            }
-    
-            // Filter products based on the search query (assuming they have a `name` property)
-            const filteredProducts = productList.filter(product =>
-                product.name.toLowerCase().includes(query.toLowerCase())
-            );
-    
-            return filteredProducts;
-        } catch (error) {
-            console.error("Error searching products:", error);
-        }
+
+    // 💾 Save to localStorage
+    saveCart() {
+        localStorage.setItem(`cart_${this.userID}`, JSON.stringify(this.cartItems));
+    }
+
+    // 🧲 Load from localStorage
+    loadCart() {
+        const data = localStorage.getItem(`cart_${this.userID}`);
+        return data ? JSON.parse(data) : [];
     }
 }
