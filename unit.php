@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 // Get the HTTP method used for the request
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Handle different types of requests
+// Handle different of requests
 switch($method) {
     case 'GET':
         // Get unit(s) (Retrieve data)
