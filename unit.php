@@ -121,7 +121,7 @@ function updateUnit() {
     }
 }
 
-// Function to delete a unit
+// Function to delete a unit from
 function deleteUnit() {
     global $conn;
     $data = json_decode(file_get_contents("php://input"));
