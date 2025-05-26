@@ -15,8 +15,6 @@ CREATE TABLE Registration (
     accStatus ENUM('Pending', 'Approved', 'Inactive') DEFAULT 'Pending',
     lastAccessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ); 
-CREATE TABLE Admin (
-);
 
 -- Create Table Manager
 CREATE TABLE Manager (
