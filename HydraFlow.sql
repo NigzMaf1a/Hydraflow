@@ -14,9 +14,7 @@ CREATE TABLE Registration (
     dLocation VARCHAR(255),
     accStatus ENUM('Pending', 'Approved', 'Inactive') DEFAULT 'Pending',
     lastAccessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
--- Create Table 
+); 
 CREATE TABLE Admin (
     AdminID INT PRIMARY KEY,
     FOREIGN KEY (AdminID) REFERENCES Registration(RegID),
