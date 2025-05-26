@@ -16,7 +16,6 @@ CREATE TABLE Registration (
     lastAccessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ); 
 CREATE TABLE Admin (
-    AdminID INT PRIMARY KEY,
 );
 
 -- Create Table Manager
