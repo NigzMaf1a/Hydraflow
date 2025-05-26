@@ -16,7 +16,7 @@ CREATE TABLE Registration (
     lastAccessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create Table Admin
+-- Create Table 
 CREATE TABLE Admin (
     AdminID INT PRIMARY KEY,
     FOREIGN KEY (AdminID) REFERENCES Registration(RegID),
