@@ -18,7 +18,6 @@ CREATE TABLE Registration (
 CREATE TABLE Admin (
     AdminID INT PRIMARY KEY,
     FOREIGN KEY (AdminID) REFERENCES Registration(RegID),
-    Balance INT DEFAULT 0
 );
 
 -- Create Table Manager
