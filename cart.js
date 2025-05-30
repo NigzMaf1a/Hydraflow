@@ -1,6 +1,5 @@
 import Trolley from "./trolley";
 import ProductManager from "./productManager";
-///////////////
 export class Cart extends Trolley{
     constructor(){
         super();
