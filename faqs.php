@@ -5,7 +5,7 @@ include('connection.php');
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Get the HTTP method used for the
+// Get the HTTP method used for
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Handle different types of requests
