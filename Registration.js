@@ -1,7 +1,7 @@
 // Import required modules
 import { getCredentials } from './logzGet';
 import { reRegUser } from './settings';
-////
+//
 
 export class Registration {
     constructor(RegID, Name1, Name2, PhoneNo, Email, Password, Gender, RegType, Location, accStatus) {
